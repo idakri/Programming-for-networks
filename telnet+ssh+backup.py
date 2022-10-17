@@ -1,12 +1,13 @@
 import netmiko
 import getpass
-from netmiko import ConnectionHandler
+from netmiko import ConnectHandler
 
 def backup_config(running_config):
     running_config = session.send_command("show running-config")
     backup_file = open("backup_file.txt", "w+")
     backup_file.write(running_config)
     backup_file.close()
+    print("You have successfully created a backup of the config file to your local machine")
     
 router_1 = {
     "device_type": "",
@@ -31,7 +32,7 @@ while connected == False:
         valid = False
         while valid == False:
             try:
-                session = netmiko.ConnectionHandler(**router_1)
+                session = netmiko.ConnectHandler(**router_1)
                 session.enable()
                 valid = True
             except:
@@ -41,9 +42,12 @@ while connected == False:
         print(running_config)
         if backup == "yes":
             backup_config(running_config)
+            print("You have successfully connected to the router via Telnet")
         else:
+            print("You have successfully connected to the router via Telnet")
             break
-        session.close()
+        
+        session.disconnect()
         connected = True
         
         
@@ -52,23 +56,25 @@ while connected == False:
         valid = False
         while valid == False:
             try:
-                session = netmiko.ConnectionHandler(**router_1)
+                session = netmiko.ConnectHandler(**router_1)
                 session.enable()
                 valid = True
             except:
                 print("Invalid credentials, try again:")
+                router_input()
         running_config = session.send_command("show running-config")
         print(running_config)
         if backup == "yes":
             backup_config(running_config)
+            print("You have successfully connected to the router via SSH")
         else:
+            print("You have successfully connected to the router via SSH")
             break
-        session.send_command("exit")
+        session.disconnect()
         connected = True
-       
-        
-        
         
     else:
         print("Invalid input, please try again")
-print("You have succesfully created a backup of the config file to your local machine")
+        
+        
+        
