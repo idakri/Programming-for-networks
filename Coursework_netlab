@@ -60,8 +60,14 @@ def vlan_configs(ip):
     elif ip == "192.168.56.101":
         host = "ip"
     
-    R1_Vlan_config = []
-    S1_Vlan_config = []
+    R1_Vlan_config = ['conf t', 'int g2', 'no shut', 'int g2.10','encapsulation dot1q 10', 'ip address 192.168.10.2 255.255.255.0', 'exit',
+    'int g2.20','encapsulation dot1q 20','ip address 192.168.20.2 255.255.255.0']
+    S1_Vlan_config1 = ['conf t','vlan 10', 'name IT']
+    S1_Vlan_config2 = ['int vlan 10', 'ip address 192.168.10.1 255.255.255.0','no shut']
+    S1_Vlan_config3 = ['vlan 20', 'name CS', 'int vlan 20'] 
+    S1_Vlan_config4 = ['ip address 192.168.20.1 255.255.255.0', 'no shut']
+    S1_Vlan_config5 = ['int g1','switchport mode access','switchport access vlan 10']
+    S1_Vlan_config6 = ['int g2', 'switchport mode access', 'switchport access vlan 20']
         
     device = {
         "device_type": "cisco_ios",
@@ -75,13 +81,24 @@ def vlan_configs(ip):
         session = netmiko.ConnectHandler(**device)
         session.enable
         print("Connected to IP: "+ip)
-        if ip == "192.168.56.130":
-            #session.send_config_set(R1_Vlan_config)
-            print("R1 was configured with Vlan settings")
-            session.disconnect()
-        elif ip == "192.168.56.101":
-            #session.send_config_set(S1_Vlan_config)
+        if ip == "192.168.56.101":
+            session.send_config_set(S1_Vlan_config1)
+            print("This works 1")
+            session.send_config_set(S1_Vlan_config2)
+            print("This works 2")
+            session.send_config_set(S1_Vlan_config3)
+            print("This works 3")
+            session.send_config_set(S1_Vlan_config4)
+            print("This works 4")
+            session.send_config_set(S1_Vlan_config5)
+            print("This works 5")
+            session.send_config_set(S1_Vlan_config6)
+            print("This works 6")
             print("S1 was configured with Vlan settings")
+            session.disconnect()
+        elif ip == "192.168.56.130":
+            session.send_config_set(R1_Vlan_config)
+            print("R1 was configured with Vlan settings")
             session.disconnect()
     except:
         print("Doesnt work")
